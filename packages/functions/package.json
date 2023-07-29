@@ -1,0 +1,21 @@
+{
+  "name": "@lucasdinonolte/utils",
+  "version": "0.0.1",
+  "description": "A small collection of javascript utility functions",
+  "main": "./dist/bundle.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "rollup -c"
+  },
+  "author": "Lucas Dino Nolte <hello@lucas-nolte.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-c8": "^0.22.0",
+    "@vitest/ui": "^0.22.0",
+    "rollup": "^3.26.3",
+    "vite": "^3.0.8",
+    "vitest": "^0.22.0"
+  }
+}

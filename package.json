@@ -1,0 +1,17 @@
+{
+  "name": "@lucasdinonolte/utils",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "changeset": "changeset",
+    "test": "npm run test --workspaces"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.2"
+  }
+}
