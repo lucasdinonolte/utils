@@ -1,5 +1,5 @@
 {
-  "name": "@lucasdinonolte/utils",
+  "name": "@lucasdinonolte/functions",
   "version": "0.0.1",
   "description": "A small collection of javascript utility functions",
   "main": "./dist/bundle.js",

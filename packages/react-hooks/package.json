@@ -1,5 +1,5 @@
 {
-  "name": "@lucasdinonolte/react-utils",
+  "name": "@lucasdinonolte/react-hooks",
   "version": "0.0.1",
   "description": "",
   "main": "dist/bundle.js",
@@ -10,7 +10,7 @@
     "build": "rollup -c"
   },
   "keywords": [],
-  "author": "Lucas Nolte",
+  "author": "Lucas Dino Nolte <hello@lucas-nolte.com>",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=18.0.0"
