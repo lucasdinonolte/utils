@@ -35,7 +35,7 @@ const setValue = (param, newValue, type) => {
   window.dispatchEvent(new Event('pushstate'));
 };
 
-const useParamState = (name, initialValue) => {
+export const useParamState = (name, initialValue) => {
   const type = useMemo(() => {
     const type = typeof initialValue;
 
@@ -75,5 +75,3 @@ const useParamState = (name, initialValue) => {
 
   return [state, set];
 };
-
-export default useParamState;
