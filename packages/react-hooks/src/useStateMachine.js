@@ -6,7 +6,7 @@ import { useConstant } from './useConstant';
  *
  * @param {object} definition
  * @example
- * const [machine, send] = useStateMachine({
+ * const [machine, send, onTransition] = useStateMachine({
  *   initial: 'idle',
  *   states: {
  *     idle: {
@@ -29,9 +29,16 @@ export const useStateMachine = (definition) => {
     value: definition.initial,
     context: definition.context || {},
     event: { type: 'INIT' },
+    listeners: [],
   };
 
   const reducer = (state, event) => {
+    if (event.type === 'ADD_EVENT_LISTENER') {
+      return {
+        ...state,
+        listeners: [...state.listeners, event.listener],
+      };
+    }
     if (event.type === 'SET_CONTEXT') {
       return {
         ...state,
@@ -66,6 +73,11 @@ export const useStateMachine = (definition) => {
         return state;
       }
 
+      // Finally apply the transition
+      state.listeners.forEach((listener) =>
+        listener.call(null, event, nextState)
+      );
+
       return {
         ...state,
         value: nextState,
@@ -84,6 +96,10 @@ export const useStateMachine = (definition) => {
     dispatch({ type: 'SET_CONTEXT', updater });
   };
 
+  const onTransition = (listener) => {
+    dispatch({ type: 'ADD_EVENT_LISTENER', listener });
+  };
+
   useEffect(() => {
     const onEnter = definition.states[state.value].effect;
     const onExit = onEnter?.({
@@ -96,5 +112,5 @@ export const useStateMachine = (definition) => {
       : undefined;
   }, [state.value]);
 
-  return [state, send];
+  return [state, send, onTransition];
 };

@@ -93,6 +93,27 @@ describe('useStateMachine', () => {
     expect(result.current[0].context.hasBeenOn).toBe(true);
   });
 
+  it('should emit an event when transitioning', () => {
+    const spy = vi.fn();
+    const { result } = renderHook(() => useStateMachine(definition));
+
+    spy.mockImplementation((event, nextState) => {
+      expect(nextState).toBe('on');
+      expect(event.type).toBe('SEND');
+      expect(event.event).toBe('ACTIVATE');
+    });
+
+    act(() => {
+      result.current[2](spy);
+    });
+
+    act(() => {
+      result.current[1]('ACTIVATE');
+    });
+
+    expect(spy).toHaveBeenCalled();
+  });
+
   it('should transition with target syntax', () => {
     const { result } = renderHook(() =>
       useStateMachine(definitionWithTargetSyntax)
