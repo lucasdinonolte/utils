@@ -9,6 +9,7 @@ export * from './src/id';
 export * from './src/last';
 export * from './src/lowercase';
 export * from './src/makeSafe';
+export * from './src/match';
 export * from './src/partial';
 export * from './src/pipe';
 export * from './src/results';
