@@ -15,5 +15,6 @@ export * from './src/pipe';
 export * from './src/results';
 export * from './src/signals';
 export * from './src/tail';
+export * from './src/tap';
 export * from './src/tryCatch';
 export * from './src/uppercase';
