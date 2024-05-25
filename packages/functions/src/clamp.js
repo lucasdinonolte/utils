@@ -1,7 +1,7 @@
 import { curry } from './curry';
 
 /**
- * Clamps a number between a minimum and maxium value.
+ * Clamps a number between a minimum and maximum value.
  *
  * @param {Number} min
  * @param {Number} max
