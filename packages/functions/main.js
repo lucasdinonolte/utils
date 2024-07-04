@@ -13,6 +13,7 @@ export * from './src/match';
 export * from './src/partial';
 export * from './src/pipe';
 export * from './src/results';
+export * from './src/roundWithPrecision';
 export * from './src/signals';
 export * from './src/tail';
 export * from './src/tap';
