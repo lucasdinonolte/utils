@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { pipe } from '../src/pipe';
+import { flow } from '../src/flow';
 import { id } from '../src/id';
 import { tap } from '../src/tap';
 
@@ -9,9 +9,9 @@ describe('tap', () => {
 
   it('runs an effect without chaning the value', () => {
     const VALUE = 'Something';
-    const piped = pipe(id, tap(tapEffect), afterTap);
+    const composition = flow(id, tap(tapEffect), afterTap);
 
-    piped(VALUE);
+    composition(VALUE);
     expect(tapEffect).toHaveBeenCalledWith(VALUE);
     expect(afterTap).toHaveBeenCalledWith(VALUE);
   });

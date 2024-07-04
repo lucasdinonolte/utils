@@ -1,11 +1,8 @@
-import { compose } from './compose';
-import { id } from './id';
+import { Result } from './types/Result';
 
 /**
- * @typedef {Object} Result<T, E>
- * @property {boolean} ok
- * @property {T} value
- * @property {E} error
+ * A more approachable – less monadic – version of
+ * the result data type.
  */
 
 /**
@@ -14,9 +11,9 @@ import { id } from './id';
  * @sig a -> Result a
  *
  * @example
- * const result = fromData(10); // { ok: true, value: 10 }
+ * const result = fromData(10);
  */
-export const fromData = (value) => ({ ok: true, value });
+export const fromData = (value) => Result.Data(value);
 
 /**
  * @param {E} error
@@ -24,9 +21,9 @@ export const fromData = (value) => ({ ok: true, value });
  * @sig a -> Result a
  *
  * @example
- * const result = fromError('error'); // { ok: false, error: 'error' }
+ * const result = fromError('error');
  */
-export const fromError = (error) => ({ ok: false, error });
+export const fromError = (error) => Result.Error(error);
 
 /**
  * Pattern matches a result
@@ -36,16 +33,19 @@ export const fromError = (error) => ({ ok: false, error });
  * @sig { data: (a -> b), error: (a -> b) } -> Result a -> b
  */
 export const matchResult =
-  ({ data = id, error = id }) =>
+  ({ data, error }) =>
     (result) =>
-      result.ok ? data(result) : error(result);
+      result.match({
+        Data: data ?? ((...args) => Result.Data(...args)),
+        Error: error ?? ((...args) => Result.Error(...args)),
+      });
 
 /**
  * @param {Function} fn
  * @returns {Function}
  * @sig (a -> b) -> Result a -> b
  */
-export const withData = (fn) => matchResult({ data: ({ value }) => fn(value) });
+export const withData = (fn) => matchResult({ data: (...args) => fn(...args) });
 
 /**
  * @param {Function} fn
@@ -53,7 +53,7 @@ export const withData = (fn) => matchResult({ data: ({ value }) => fn(value) });
  * @sig (a -> b) -> Result a -> b
  */
 export const withError = (fn) =>
-  matchResult({ error: ({ error }) => fn(error) });
+  matchResult({ error: (...args) => fn(...args) });
 
 /**
  * aka `map`
@@ -67,7 +67,7 @@ export const withError = (fn) =>
  * const result = mapResult(inc, fromData(10)); // { ok: true, value: 11 }
  * const error = mapResult(inc, fromError('error')); // { ok: false, error: 'error' }
  */
-export const mapResult = (fn) => withData(compose(fromData, fn));
+export const mapResult = (fn) => (res) => res.map(fn);
 
 /**
  * aka `flatMap`
@@ -81,7 +81,7 @@ export const mapResult = (fn) => withData(compose(fromData, fn));
  * const result = chainResult(inc, fromData(10)); // { ok: true, value: 11 }
  * const error = mapResult(inc, fromError('error')); // { ok: false, error: 'error' }
  */
-export const chainResult = (fn) => withData(fn);
+export const chainResult = (fn) => (res) => res.chain(fn);
 
 /**
  * @param {Function} fn
@@ -112,7 +112,4 @@ export const encaseInResult =
  * const result = fromData(10);
  * const value = unwrapResult(result); // 10
  */
-export const unwrapResult = (result) => {
-  if (result.ok) return result.value;
-  throw result.error;
-};
+export const unwrapResult = (result) => result.unwrap();

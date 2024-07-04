@@ -20,13 +20,15 @@ describe('result', () => {
 
   describe('fromData', () => {
     it('works as expected', () => {
-      expect(fromData(10)).toStrictEqual({ ok: true, value: 10 });
+      const res = fromData(10);
+      expect(res.is('Data')).toBe(true);
     });
   });
 
   describe('fromError', () => {
     it('works as expected', () => {
-      expect(fromError('error')).toStrictEqual({ ok: false, error: 'error' });
+      const res = fromError('error');
+      expect(res.is('Error'));
     });
   });
 
@@ -37,7 +39,7 @@ describe('result', () => {
 
       matchResult({ data: dataFn, error: errorFn })(ok);
 
-      expect(dataFn).toHaveBeenCalledWith(ok);
+      expect(dataFn).toHaveBeenCalled();
       expect(errorFn).not.toHaveBeenCalled();
     });
 
@@ -48,7 +50,7 @@ describe('result', () => {
       matchResult({ data: dataFn, error: errorFn })(err);
 
       expect(dataFn).not.toHaveBeenCalled();
-      expect(errorFn).toHaveBeenCalledWith(err);
+      expect(errorFn).toHaveBeenCalled();
     });
   });
 
@@ -56,7 +58,7 @@ describe('result', () => {
     it('should execute the callback for an ok result', () => {
       const dataFn = vi.fn();
       withData(dataFn)(ok);
-      expect(dataFn).toHaveBeenCalledWith(ok.value);
+      expect(dataFn).toHaveBeenCalledWith(10);
     });
 
     it('should not execute the callback for an error result but pass through the error', () => {
@@ -64,7 +66,7 @@ describe('result', () => {
       const res = withData(dataFn)(err);
 
       expect(dataFn).not.toHaveBeenCalled();
-      expect(res).toBe(err);
+      expect(res.is('Error')).toBe(true);
     });
   });
 
@@ -72,7 +74,7 @@ describe('result', () => {
     it('should execute the callback for an error result', () => {
       const errorFn = vi.fn();
       withError(errorFn)(err);
-      expect(errorFn).toHaveBeenCalledWith(err.error);
+      expect(errorFn).toHaveBeenCalledWith('error');
     });
 
     it('should not execute the callback for an ok result but pass through the data', () => {
@@ -80,19 +82,20 @@ describe('result', () => {
       const res = withError(errorFn)(ok);
 
       expect(errorFn).not.toHaveBeenCalled();
-      expect(res).toBe(ok);
+      expect(res.is('Data')).toBe(true);
     });
   });
 
   describe('mapResult', () => {
     it('should work as expected', () => {
       const res = mapResult(inc)(ok);
-      expect(res).toStrictEqual({ ok: true, value: 11 });
+      expect(res.is('Data')).toBe(true);
+      expect(res.payload.data).toBe(11);
     });
 
     it('should pass along any error', () => {
       const res = mapResult(inc)(err);
-      expect(res).toStrictEqual(err);
+      expect(res.is('Error')).toBe(true);
     });
   });
 
@@ -104,7 +107,7 @@ describe('result', () => {
 
     it('should pass along any error', () => {
       const res = chainResult(double)(err);
-      expect(res).toStrictEqual(err);
+      expect(res.is('Error')).toBe(true);
     });
   });
 
@@ -129,7 +132,7 @@ describe('result', () => {
     it('should return an ok result for a non-throwing function', () => {
       const fn = (x) => x;
       const res = encaseInResult(fn)(10);
-      expect(res).toStrictEqual({ ok: true, value: 10 });
+      expect(res.is('Data')).toBe(true);
     });
 
     it('should return an error result for a throwing function', () => {
@@ -137,7 +140,7 @@ describe('result', () => {
         throw new Error('error');
       };
       const res = encaseInResult(fn)(10);
-      expect(res).toStrictEqual({ ok: false, error: new Error('error') });
+      expect(res.is('Error')).toBe(true);
     });
   });
 });

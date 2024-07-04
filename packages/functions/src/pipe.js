@@ -1,19 +1,20 @@
-import { compose } from "./compose"
+import { compose } from './compose';
 
 /**
- * Composes a list of unary functions from left to right.
+ * Pipes a single value into a composition of
+ * unary functions.
  *
- * @param {...Function} fns ths functions to compose
- * @returns {Function} the composed function
+ * @param {any} value
+ * @param {...Function} fns
+ * @returns {any}
+ *
  * @example
  *   const add1 = x => x + 1;
  *   const double = x => x * 2;
  *
- *   const add1ThenDouble = pipe(double, add1);
- *
- *   doubleThenAdd1(2); // => 5
+ *   pipe(2, double, add1); // => 5
  *
  *   // This is the same as
  *   add1(double(2));   // => 5
  */
-export const pipe = (...fns) => compose(...fns.reverse()); 
+export const pipe = (value, ...fns) => compose(...fns.reverse())(value);
