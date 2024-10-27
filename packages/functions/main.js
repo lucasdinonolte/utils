@@ -16,6 +16,7 @@ export * from './src/makeSafe';
 export * from './src/match';
 export * from './src/partial';
 export * from './src/results';
+export * from './src/roundWithPrecision';
 export * from './src/signals';
 export * from './src/tagged';
 export * from './src/tail';
