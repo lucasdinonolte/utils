@@ -7,6 +7,7 @@ export * from './src/drop';
 export * from './src/flow';
 export * from './src/head';
 export * from './src/id';
+export * from './src/invariant';
 export * from './src/isInteger';
 export * from './src/last';
 export * from './src/lowercase';
